@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install --prefix backend && npm install --prefix frontend
+
+      - name: Run tests
+        run: npm test --prefix backend
+
+      - name: Build Docker images
+        run: docker-compose build
+
+      - name: Push to GCP Artifact Registry
+        env:
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          echo $GCP_SA_KEY | base64 --decode > key.json
+          gcloud auth activate-service-account --key-file=key.json
+          gcloud auth configure-docker
+          docker-compose push
