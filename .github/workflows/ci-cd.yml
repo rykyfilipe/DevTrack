@@ -23,11 +23,15 @@ jobs:
       - name: Build Docker images
         run: docker compose build # 👈 actualizat
 
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
 
       - name: Configure Docker authentication
         run: gcloud auth configure-docker europe-central2-docker.pkg.dev
