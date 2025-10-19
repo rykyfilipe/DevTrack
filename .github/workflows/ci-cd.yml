@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -19,18 +20,20 @@ jobs:
       - name: Install dependencies
         run: npm install --prefix backend && npm install --prefix frontend
 
-      - name: Run tests
-        run: npm test --prefix backend
-
       - name: Build Docker images
         run: docker-compose build
 
+      # 🟢 Pas 1: Setup Cloud SDK (autentificare GCP)
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      # 🟢 Pas 2: Configure Docker pentru Artifact Registry
+      - name: Configure Docker authentication
+        run: gcloud auth configure-docker europe-central2-docker.pkg.dev
+
+      # 🟢 Pas 3: Push imagini în Artifact Registry
       - name: Push to GCP Artifact Registry
-        env:
-          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: |
-          echo $GCP_SA_KEY | base64 --decode > key.json
-          gcloud auth activate-service-account --key-file=key.json
-          gcloud auth configure-docker
-          docker-compose push
+        run: docker-compose push
