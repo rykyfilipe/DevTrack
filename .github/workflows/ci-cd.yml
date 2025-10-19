@@ -21,19 +21,16 @@ jobs:
         run: npm install --prefix backend && npm install --prefix frontend
 
       - name: Build Docker images
-        run: docker-compose build
+        run: docker compose build # 👈 actualizat
 
-      # 🟢 Pas 1: Setup Cloud SDK (autentificare GCP)
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
 
-      # 🟢 Pas 2: Configure Docker pentru Artifact Registry
       - name: Configure Docker authentication
         run: gcloud auth configure-docker europe-central2-docker.pkg.dev
 
-      # 🟢 Pas 3: Push imagini în Artifact Registry
       - name: Push to GCP Artifact Registry
-        run: docker-compose push
+        run: docker compose push # 👈 actualizat
