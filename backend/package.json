@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx ts-node-dev --respawn src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node server.ts"
   },
   "author": "",
   "license": "ISC",
