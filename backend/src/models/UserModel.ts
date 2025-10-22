@@ -27,7 +27,7 @@ export class UserModel {
       data: {
         name,
         email,
-        passwordHash : password,
+        password : password,
         role,
       },
     });
@@ -35,10 +35,17 @@ export class UserModel {
 
   // ✅ Metodă pentru găsirea unui user după email
   async findByEmail(email: string) {
+    console.info("in model")
     return await this.prisma.user.findUnique({
       where: { email },
     });
   }
+
+  async deleteAll(){
+    return await this.prisma.user.deleteMany();
+  }
+
+ 
 
   // ✅ Metodă pentru obținerea tuturor userilor
   async getAll() {
