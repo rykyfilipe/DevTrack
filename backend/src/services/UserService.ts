@@ -1,5 +1,5 @@
 import { UserModel, IUserInput } from "../models/UserModel";
-import bcrypt from "bcrypt";
+import { hashPassword, verifyPassword } from "../utils/auth";
 
 export class UserService {
   private userModel: UserModel;
@@ -14,7 +14,7 @@ export class UserService {
       throw new Error("User already exists");
     }
 
-    const passwordHash = await bcrypt.hash(data.password, 10);
+    const passwordHash = await hashPassword(data.password);
 
     return await this.userModel.createUser({
       name: data.name,
@@ -22,6 +22,10 @@ export class UserService {
       password : passwordHash,
       role: data.role,
     });
+  }
+
+  async getUserByEmail(email : string){
+    return await this.userModel.findByEmail(email);
   }
 
   async getAllUsers() {
