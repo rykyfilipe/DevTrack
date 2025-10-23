@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "npx ts-node-dev --respawn src/server.ts",
     "build": "tsc",
-    "start": "npx ts-node-dev --respawn src/server.ts"
+    "start": "npx ts-node-dev --respawn src/server.ts",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -24,8 +25,11 @@
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.8.1",
+    "jest": "^30.2.0",
     "prisma": "^6.17.1",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

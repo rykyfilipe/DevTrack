@@ -4,8 +4,8 @@ import { hashPassword, verifyPassword } from "../utils/auth";
 export class UserService {
   private userModel: UserModel;
 
-  constructor() {
-    this.userModel = new UserModel();
+ constructor(userModel?: UserModel) {
+    this.userModel = userModel || new UserModel();
   }
 
   async createUser(data: IUserInput & { password: string }) {
