@@ -35,7 +35,8 @@ export class UserModel {
 
   // ✅ Metodă pentru găsirea unui user după email
   async findByEmail(email: string) {
-    console.info("in model")
+    console.log("DATABASE_URL", process.env.DATABASE_URL);
+
     return await this.prisma.user.findUnique({
       where: { email },
     });
