@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
-import { hashPassword, verifyPassword } from '../auth';
+import { createJwt, hashPassword, Payload, verifyJwt, verifyPassword } from '../auth';
+import { number } from 'joi';
 describe('Auth Utils - Password Hashing', () => {
     describe('hashPassword', () => {
         it('should return a hashed password', async () => {
@@ -73,4 +74,43 @@ describe('Auth Utils - Password Hashing', () => {
             expect(isValidCorrect).toBe(true);
         });
     });
+
+});
+
+
+describe('Jwt funtctions', () => {
+    
+    it('should create a valid JWT token', async () => {
+        const payload : Payload= { user : {id: "id", name: 'testuser' }};
+        
+        const token = await createJwt(payload);
+        
+        expect(token).toBeDefined();
+        expect(typeof token).toBe('string');
+        expect(token.split('.').length).toBe(3); 
+    });
+
+    it('should return true if token is valid', async () => {
+        const payload : Payload= { user : {id: "id", name: 'testuser' }};
+        const token = await createJwt(payload);
+
+        const result = await verifyJwt(token as string);
+
+        expect(result).toBeDefined();
+        expect(result).toEqual({ id: "id", name: "testuser", iat: expect.any(Number), exp: expect.any(Number) });
+    });
+    
+    it('should throw an error for invalid token', async () => {
+        const invalidToken = 'invalid.token.string';
+
+        await expect(verifyJwt(invalidToken)).rejects.toThrow();
+    });
+
+    it('should throw error for empty string', async () => {
+        const invalidToken = '';
+
+        await expect(verifyJwt(invalidToken)).rejects.toThrow();
+    });
+    
+
 });
