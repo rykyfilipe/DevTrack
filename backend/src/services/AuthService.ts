@@ -1,6 +1,6 @@
 import { User } from "../generated/prisma";
 import { IUserInput } from "../models/UserModel";
-import { hashPassword, verifyPassword } from "../utils/auth";
+import { createJwt, hashPassword, verifyPassword } from "../utils/auth";
 import { UserService } from "./UserService";
 
 
@@ -24,9 +24,9 @@ export class AuthService{
              throw new Error("Email or password is wrong");
         }
 
-        console.info("passs")
+        const token = await createJwt({user:{id:user.id,name:user.name}});            
 
-        return user;
+        return {user,token};
     }
 
     async signUp({name,password,email,role}:IUserInput & {password : string}){
@@ -36,7 +36,11 @@ export class AuthService{
              throw new Error("User with this email already exists.");
         }
 
-        return await this.userService.createUser({name,email,password,role});
+        const newUser = await this.userService.createUser({name,email,password,role});
+
+        const token = await createJwt({user:{id:newUser.id,name:newUser.name}});            
+
+        return {newUser,token};
 
     }
 
