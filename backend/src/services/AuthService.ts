@@ -6,8 +6,11 @@ import { UserService } from "./UserService";
 
 export class AuthService{
 
-    private userService = new UserService();
+     private userService: UserService;
 
+    constructor(userService?: UserService) {
+        this.userService = userService || new UserService();
+    }
     async logIn({name,password,email}:IUserInput & {password : string}){
         const user : User | null = await this.userService.getUserByEmail(email);
 
@@ -17,8 +20,8 @@ export class AuthService{
 
         const isPasswordValid = await verifyPassword(user.password,password);
 
-        if(name !== user.name || !isPasswordValid){
-             throw new Error("Username or password is wrong");
+        if(email !== user.email || !isPasswordValid){
+             throw new Error("Email or password is wrong");
         }
 
         console.info("passs")
