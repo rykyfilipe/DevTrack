@@ -4,21 +4,21 @@ import { z } from "zod";
 
 // Schema Zod pentru User
 const userSchema = z.object({
-  id: z.string().optional(),
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(6),
   role: z.enum(["ADMIN", "MEMBER", "VIEWER"]),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;
 
+export type UserRole = "ADMIN" | "MEMBER" | "VIEWER";
+
 interface AuthContextType {
   user: User | null;
-  login: (data: User) => Promise<void>;
+  login: (data: Omit<User,'name'>) => Promise<boolean>;
   logout: () => void;
+  signup: (data: User) => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -73,21 +73,45 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   // Funcția login pentru formular
-  const login = async (data: User) => {
+  const login = async ({email,password,role} : {email:string,password:string,role:UserRole}) => {
     try {
       const response = await axiosClient.post("/auth/login", {
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        password: data.password,
+        email: email,
+        role: role,
+        password: password,
       });
 
       if (response.status === 200) {
         setUser(response.data);
         localStorage.setItem("devtrack-user", JSON.stringify(response.data));
+        return true;
       }
+
+      return false;
     } catch (error) {
       console.error("Login error:", error);
+      return false;
+    }
+  };
+
+   const signup = async ({name,email,password,role} : {name:string,email:string,password:string,role:UserRole}) => {
+    try {
+      const response = await axiosClient.post("/auth/signup", {
+        name: name,
+        email: email,
+        role: role,
+        password: password,
+      });
+
+      if (response.status === 201) {
+        setUser(response.data);
+        localStorage.setItem("devtrack-user", JSON.stringify(response.data));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Login error:", error);
+      return false;
     }
   };
 
@@ -98,7 +122,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout,signup }}>
       {children}
     </AuthContext.Provider>
   );
