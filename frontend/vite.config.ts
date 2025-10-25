@@ -9,11 +9,17 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 8080,
-    host: true
+    host: true,
+
   },
    resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  preview: {
+    port: 8080,
+    host: true,
+    allowedHosts: ['frontend-904454434613.europe-west1.run.app'],
   },
 })
