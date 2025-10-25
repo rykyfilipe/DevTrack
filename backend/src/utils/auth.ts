@@ -32,6 +32,8 @@ export async function createJwt(payload:Payload) {
 }
 
 export async function verifyJwt(token:string) {
+  console.log("Verifying token:", token);
+  console.log("Using JWT_SECRET:", JWT_SECRET);
   const decoded = jwt.verify(token, JWT_SECRET as jwt.Secret) as Payload;
   return decoded;
 }

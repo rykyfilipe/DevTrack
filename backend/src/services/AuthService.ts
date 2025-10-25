@@ -1,6 +1,6 @@
 import { User } from "../generated/prisma";
 import { IUserInput } from "../models/UserModel";
-import { createJwt, hashPassword, verifyPassword } from "../utils/auth";
+import { createJwt, hashPassword, verifyJwt, verifyPassword } from "../utils/auth";
 import { UserService } from "./UserService";
 
 
@@ -26,7 +26,9 @@ export class AuthService{
 
         const token = await createJwt({user:{id:user.id,name:user.name}});            
 
-        return {user,token};
+        const userData = {id: user.id, name: user.name, email: user.email, role: user.role};
+
+        return {userData,token};
     }
 
     async signUp({name,password,email,role}:IUserInput & {password : string}){
@@ -40,10 +42,29 @@ export class AuthService{
 
         const token = await createJwt({user:{id:newUser.id,name:newUser.name}});            
 
-        return {newUser,token};
+        const userData = {id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role};
+
+
+        return {userData,token};
 
     }
 
+    async getMe(token:string){
+        const decodedToken : any = await verifyJwt(token);
 
+        console.log("Decoded token in getMe:", decodedToken);
+
+        if(!decodedToken ){
+            throw new Error("Unauthorized");
+        }
+
+        const user = await this.userService.getUserById(decodedToken.id);
+
+        if(!user){
+            throw new Error("User not found");
+        }
+
+        return user;
+    }
 
 }

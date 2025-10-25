@@ -43,9 +43,7 @@ export const Login = ({ email, setEmail, password, setPassword, role, setRole }:
           <option value="VIEWER">VIEWER</option>
         </select>
 
-        <a href="/forgot-password" className="text-sm text-blue-500 hover:underline mt-2">
-          Forgot password?
-        </a>
+       
       </div>
     </div>
   );

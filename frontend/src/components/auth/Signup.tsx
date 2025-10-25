@@ -52,9 +52,7 @@ export const SignUp = ({ name, setName, email, setEmail, password, setPassword, 
           <option value="VIEWER">VIEWER</option>
         </select>
 
-        <a href="/forgot-password" className="text-sm text-blue-500 hover:underline mt-2">
-          Forgot password?
-        </a>
+      
       </div>
     </div>
   );

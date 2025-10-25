@@ -1,24 +1,24 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Login } from "@/components/auth/Login";
 import { SignUp } from "@/components/auth/Signup";
-
+import ForgotPassword from "@/components/auth/ForgotPassword";
 
 // Componenta principală Auth
 function Auth() {
   const auth = useAuth();
   if (!auth) return null;
 
-  const { login, signup } = auth;
+  const { login, signup,user } = auth;
 
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>('');
   const [role, setRole] = useState<"ADMIN" | "MEMBER" | "VIEWER">("ADMIN");
 
-  const [tabs, setTabs] = useState<"LOGIN" | "SIGNUP">("LOGIN");
+  const [tabs, setTabs] = useState<"LOGIN" | "SIGNUP" | "FORGOT_PASSWORD">("LOGIN");
 
   const navigate = useNavigate();
 
@@ -29,12 +29,22 @@ function Auth() {
       const result = await login({ email, password, role });
       if (!result) alert("Login failed. Please check your credentials.");
       else navigate("/dashboard");
-    } else {
+    } else if(tabs === "SIGNUP") {
       const result = await signup({ name, email, password, role });
       if (!result) alert("Signup failed. Server error or user with that email exists already.");
       else navigate("/dashboard");
     }
+    else if(tabs === "FORGOT_PASSWORD") {
+      alert("If an account with that email exists, a password reset link has been sent.");
+      setTabs("LOGIN");
+    }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user]);
 
 
   return (
@@ -102,11 +112,27 @@ function Auth() {
           />
         )}
 
+        {tabs === "FORGOT_PASSWORD" && (
+          <ForgotPassword email={email} setEmail={setEmail}/>
+        )}
+        {tabs !== "FORGOT_PASSWORD" &&
+        <div className="w-full flex justify-end">
+          <button 
+            type="button"
+            className=" bg-transparent  w-max h-min text-blue-600 hover:border-b-blue-800 hover:cursor-pointer text-sm "
+            onClick={() => setTabs("FORGOT_PASSWORD")}>
+            
+            Forgot password?
+          </button>
+        </div>
+      }
         <button
           type="submit"
           className="mt-5 bg-[#2071f3] font-semibold text-white text-sm p-2 rounded-2xl hover:bg-blue-600 transition-colors hover:cursor-pointer"
         >
-          {tabs === "LOGIN" ? "Login" : "Sign Up"}
+          {tabs === "LOGIN" &&"Login" }
+          {tabs === "SIGNUP" && "Sign Up"}
+          {tabs === "FORGOT_PASSWORD" && "Submit"}
         </button>
       </form>
     </div>

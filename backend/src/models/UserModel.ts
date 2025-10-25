@@ -46,7 +46,11 @@ export class UserModel {
     return await this.prisma.user.deleteMany();
   }
 
- 
+ async findById(id: string) {
+    return await this.prisma.user.findUnique({
+      where: { id },
+    });
+  }
 
   // ✅ Metodă pentru obținerea tuturor userilor
   async getAll() {

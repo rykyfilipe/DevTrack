@@ -1,7 +1,6 @@
 import { AuthService } from "../services/AuthService";
 import { Request, Response } from "express";
-import { UserService } from "../services/UserService";
-import { UserRole } from "../generated/prisma";
+
 
 
 
@@ -31,6 +30,30 @@ export class AuthController{
             const { name, email, password, role } = req.body;
             
             const user = await this.authService.logIn({name,email,password,role});
+
+            res.status(200).json(user);
+            
+        } catch ( error : any) {
+            console.error(error);
+            res.status(400).json({error : error.message});
+        }
+    }
+
+    getMe = async (req:Request,res:Response) => {
+        try {
+            const authHeader = req.headers.authorization;
+
+            if(!authHeader){
+                throw new Error("Unauthorized");
+            }
+
+            const token = authHeader.split(" ")[1];
+
+            if(!token){
+                throw new Error("Unauthorized");
+            }
+
+            const user = await this.authService.getMe(token);
 
             res.status(200).json(user);
             

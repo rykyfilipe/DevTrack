@@ -49,7 +49,12 @@ describe('AuthService tests', () => {
             // Assertions
             expect(userService.getUserByEmail).toHaveBeenCalledWith(userInput.email);
             expect(authUtils.verifyPassword).toHaveBeenCalledWith(fakeUser.password, userInput.password);
-            expect(result).toEqual({user : fakeUser,token : expect.any(String)});
+            expect(result).toEqual({userData : {
+                id: fakeUser.id,
+                name: fakeUser.name,
+                email: fakeUser.email,
+                role: fakeUser.role
+            } ,token : expect.any(String)});
         });
 
         it('should throw error if user does not exist', async () => {
@@ -131,7 +136,12 @@ describe('AuthService tests', () => {
 
             expect(userService.getUserByEmail).toHaveBeenCalledWith(userInput.email);
             expect(userService.createUser).toHaveBeenCalledWith(userInput);
-            expect(result).toEqual({newUser : fakeNewUser,token : expect.any(String)});
+            expect(result).toEqual({userData : {
+                id: fakeNewUser.id,
+                name: fakeNewUser.name,
+                email: fakeNewUser.email,
+                role: fakeNewUser.role
+            } ,token : expect.any(String)});
 
         });
 

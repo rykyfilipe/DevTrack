@@ -28,6 +28,10 @@ export class UserService {
     return await this.userModel.findByEmail(email);
   }
 
+  async getUserById(id : string){
+    return await this.userModel.findById(id);
+  }
+
   async getAllUsers() {
     return await this.userModel.getAll();
   }
