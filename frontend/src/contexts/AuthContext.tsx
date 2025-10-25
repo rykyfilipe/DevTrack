@@ -1,6 +1,6 @@
 import axiosClient from "@/api/AxiosClient";
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
-import { z } from "zod";
+import { set, z } from "zod";
 
 // Schema Zod pentru User
 const userSchema = z.object({
@@ -29,40 +29,39 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   // Încearcă să logheze user-ul din localStorage la mount
   useEffect(() => {
     const tryLogin = async () => {
       try {
-        const rawUser = localStorage.getItem("devtrack-user");
+        const rawUser = localStorage.getItem("devtrack-data");
         if (!rawUser) return;
 
-        const parsedUser = JSON.parse(rawUser);
-        const validated = userSchema.safeParse(parsedUser);
+        const parsedData= JSON.parse(rawUser);
 
-        if (validated.success) {
-          const validUser = validated.data;
-          setUser(validUser);
+        console.log("Parsed user data from localStorage:", parsedData);
+
+        if (parsedData) {
+          setToken(parsedData.token || null);
 
           // Optional: re-login la server
           try {
-            const response = await axiosClient.post("/auth/login", {
-              name: validUser.name,
-              email: validUser.email,
-              role: validUser.role,
-              password: validUser.password,
+            const response = await axiosClient.get("/auth/me", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             });
 
             if (response.status === 200) {
               setUser(response.data);
-              localStorage.setItem("devtrack-user", JSON.stringify(response.data));
             }
           } catch (err) {
             console.error("Server login failed:", err);
           }
         } else {
-          console.warn("Invalid user in localStorage:", validated.error.format());
-          localStorage.removeItem("devtrack-user");
+          console.warn("Invalid user in localStorage:");
+          localStorage.removeItem("devtrack-data");
         }
       } catch (error) {
         console.error("AuthProvider error:", error);
@@ -83,7 +82,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (response.status === 200) {
         setUser(response.data);
-        localStorage.setItem("devtrack-user", JSON.stringify(response.data));
+        setToken(response.data.token);
+        localStorage.setItem("devtrack-data", JSON.stringify(response.data));
         return true;
       }
 
@@ -104,8 +104,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (response.status === 201) {
-        setUser(response.data);
-        localStorage.setItem("devtrack-user", JSON.stringify(response.data));
+        setUser(response.data.user);
+        setToken(response.data.token);
+        localStorage.setItem("devtrack-data", JSON.stringify(response.data));
         return true;
       }
       return false;
@@ -118,7 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Logout
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("devtrack-user");
+    localStorage.removeItem("devtrack-data");
   };
 
   return (

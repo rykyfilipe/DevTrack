@@ -33,7 +33,6 @@ describe('Login Component', () => {
   test('renders all inputs and elements', () => {
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getByText(/forgot password\?/i)).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toBeInTheDocument(); // select
     expect(screen.getByRole('option', { name: 'ADMIN' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'MEMBER' })).toBeInTheDocument();

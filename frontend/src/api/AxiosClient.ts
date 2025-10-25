@@ -12,7 +12,8 @@ const axiosClient = axios.create({
 
 // Interceptor request: adaugă token automat
 axiosClient.interceptors.request.use(config => {
-  const token = localStorage.getItem("token");
+  const data = localStorage.getItem("devtrack-data");
+  const token = data ? JSON.parse(data).token : null;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

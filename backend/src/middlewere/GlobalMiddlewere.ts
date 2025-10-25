@@ -9,6 +9,9 @@ export async function GlobalMiddlewere(req:Request,res:Response,next : NextFunct
 
         const url = req.url;
 
+        console.log("Request URL:", url);
+        console.log("Body :", req.body);
+
         if(url && alowedRoutesWithoutAutorization.includes(url)){
             return next();
         }
@@ -41,5 +44,7 @@ export async function GlobalMiddlewere(req:Request,res:Response,next : NextFunct
 
 const alowedRoutesWithoutAutorization = [
     "/auth/login",
-    "/auth/signup"
+    "/auth/signup",
+    "auth/me"
+
 ];
