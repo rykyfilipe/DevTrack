@@ -28,6 +28,7 @@ jobs:
 
       - name: Run frontend tests
         run: npm --prefix frontend test
+
       - name: Build Docker images
         run: docker compose build # 👈 actualizat
 
