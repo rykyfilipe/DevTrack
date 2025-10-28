@@ -17,9 +17,9 @@ export type UserRole = "ADMIN" | "MEMBER" | "VIEWER";
 
 interface AuthContextType {
   user: User | null;
-  login: (data: Omit<User,'name'>) => Promise<boolean>;
+  login: (data: Omit<User,'name' | 'id'>) => Promise<boolean>;
   logout: () => void;
-  signup: (data: User) => Promise<boolean>;
+  signup: (data: Omit<User,'id'>) => Promise<boolean>;
   token?: string | null;
 }
 

@@ -26,7 +26,7 @@ function Auth() {
     e.preventDefault();
 
     if (tabs === "LOGIN") {
-      const result = await login({ email, password, role });
+      const result = await login({  email, password, role });
       if (!result) alert("Login failed. Please check your credentials.");
       else navigate("/dashboard");
     } else if(tabs === "SIGNUP") {

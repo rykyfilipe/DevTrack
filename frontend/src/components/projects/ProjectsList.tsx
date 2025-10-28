@@ -67,7 +67,7 @@ function ProjectsList({ projects,startEditProject,deleteProject }: Props) {
                                         </p>
                                     </td>
                                     <td className="px-6 py-4 text-gray-400">
-                                        {project.owner}
+                                        {project.ownerId}
                                     </td>
                                     <td className="px-6 py-4 text-gray-400 flex items-center gap-2">
                                         <Calendar className="w-4 h-4 text-gray-500" />
