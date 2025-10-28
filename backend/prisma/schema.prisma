@@ -102,8 +102,10 @@ model Notification {
 }
 
 model ActivityLog {
-  id     String @id @default(uuid())
-  action String
+  id          String @id @default(uuid())
+  action      String
+  description String
+  category    String
 
   projectId String?
   project   Project? @relation(fields: [projectId], references: [id])

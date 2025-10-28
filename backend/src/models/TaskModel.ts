@@ -35,6 +35,36 @@ export class TaskModel{
         });
     }
 
+    async countTasksByStatus(userId :string ,status:TaskStatus){
+        return await this.prisma.task.count({
+            where:{
+                assignedToId:userId,
+                status:status
+            }
+        });
+    }
+
+    async getCompletedTasksOverTime(userId:string){
+        const result = await this.prisma.$queryRaw<
+            { date: string; completedTasks: number }[]
+        >`
+            SELECT 
+                DATE_TRUNC('month', "updatedAt") AS date,
+                COUNT(*) AS "completedTasks"
+            FROM 
+                "Task"
+            WHERE 
+                "assignedToId" = ${userId} AND
+                status = 'DONE'
+            GROUP BY 
+                DATE_TRUNC('month', "updatedAt")
+            ORDER BY 
+                date;
+        `;
+
+        return result;
+    }
+
     async getById(taskId:string){
         return await this.prisma.task.findUnique({
             where:{

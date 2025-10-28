@@ -1,4 +1,3 @@
-import type React from "react";
 
 export interface Stat {
   label: string;
@@ -6,7 +5,15 @@ export interface Stat {
 }
 
 export interface Activity{
-  category: React.ReactElement;
-  description: string;
-  time: string;
+  id: string;
+  action: string;
+  projectId?: string;
+  taskId?: string | null;
+  userId?: string;
+
+  createdAt: Date;
+  updatedAt?: Date;
+
+  category?: string;
+  description?: string;
 }
