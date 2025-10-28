@@ -20,6 +20,6 @@ export default defineConfig({
   preview: {
     port: 8080,
     host: true,
-    allowedHosts: ['frontend-904454434613.europe-west1.run.app'],
+    allowedHosts: ['frontend-904454434613.europe-west1.run.app','https://myapp-904454434613.europe-central2.run.app'],
   },
 })
