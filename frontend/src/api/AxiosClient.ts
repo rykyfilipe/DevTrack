@@ -9,6 +9,7 @@ const axiosClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+console.log("Backend URL:", import.meta.env.VITE_PUBLIC_BACKEND_URL);
 
 // Interceptor request: adaugă token automat
 axiosClient.interceptors.request.use(config => {
