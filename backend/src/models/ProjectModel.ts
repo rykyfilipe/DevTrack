@@ -30,6 +30,16 @@ export class ProjectModel{
         });
     }
 
+    async countProjects(userId : string){
+        return await this.prisma.project.count(
+            {
+                where:{
+                    ownerId : userId
+                }
+            }
+        );
+    }
+
     async getById(projectId : string){
         return await this.prisma.project.findUnique({
             where:{

@@ -33,6 +33,20 @@ export class TeamModel{
         });
     }
 
+    async countTeamMembers(userId:string){
+        return await this.prisma.teamMember.count({
+            where:{
+                team:{
+                    TeamMember:{
+                        some:{
+                            userId:userId
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     async getAll(){
         return await this.prisma.team.findMany();
     }

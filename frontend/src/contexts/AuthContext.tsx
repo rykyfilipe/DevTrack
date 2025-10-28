@@ -19,6 +19,7 @@ interface AuthContextType {
   login: (data: Omit<User,'name'>) => Promise<boolean>;
   logout: () => void;
   signup: (data: User) => Promise<boolean>;
+  token?: string | null;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -123,7 +124,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout,signup }}>
+    <AuthContext.Provider value={{ user, login, logout,signup ,token}}>
       {children}
     </AuthContext.Provider>
   );
