@@ -30,6 +30,19 @@ export class ProjectModel{
         });
     }
 
+    async editProject({name,description,status,projectId}:Omit<IProjectInput,"ownerId"> & {projectId : string}){
+        return await this.prisma.project.update({
+            where:{
+                id:projectId
+            },
+            data:{
+                name,
+                description,
+                status
+            }
+        });
+    }
+
     async countProjects(userId : string){
         return await this.prisma.project.count(
             {
@@ -48,7 +61,19 @@ export class ProjectModel{
         })
     }
 
-    async getAll(){
-        return await this.prisma.project.findMany();
+    async getAll(userId : string){
+        return await this.prisma.project.findMany({
+            where:{
+               ownerId:userId
+            }
+        });
+    }
+
+    async deleteProject(id : string){
+        return await this.prisma.project.delete({
+            where:{
+                id
+            }
+        })
     }
 }

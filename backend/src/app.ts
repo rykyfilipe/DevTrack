@@ -6,6 +6,7 @@ import userRoutes from "./routes/UserRoutes";
 import authRoutes from "./routes/AuthRoutes";
 import { GlobalMiddlewere } from "./middlewere/GlobalMiddlewere";
 import dashboardRoutes from "./routes/DashboardRoutes";
+import projectRoutes from "./routes/ProjectRoutes";
 
 dotenv.config();
 const app = express();
@@ -32,6 +33,6 @@ app.use(GlobalMiddlewere);
 app.use("/api/users", userRoutes);
 app.use("/auth",authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-
+app.use("/api/projects",projectRoutes);
 
 export default app;

@@ -4,6 +4,7 @@ import {  z } from "zod";
 
 // Schema Zod pentru User
 const userSchema = z.object({
+  id:z.string(),
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(6),

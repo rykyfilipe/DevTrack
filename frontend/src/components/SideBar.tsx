@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { ChartArea, CheckIcon, File, Layout, Plus, Users } from "lucide-react"
+import { ChartArea, CheckIcon, File, Layout, Users } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 type SideItem = {
@@ -59,14 +59,7 @@ function SideBar() {
         })}
       </ul>
 
-      <div className="w-full justify-end mt-auto p-4">
-        <button className="w-full bg-blue-500 py-2 font-bold rounded-4xl hover:cursor-pointer hover:scale-110 transition-all hidden md:block">
-          New Project
-        </button>
-        <button className="w-max p-2 bg-blue-500 rounded-full font-bold  hover:cursor-pointer hover:scale-110 transition-all md:hidden block">
-          <Plus/>
-        </button>
-      </div>
+     
     </div>
   )
 }
