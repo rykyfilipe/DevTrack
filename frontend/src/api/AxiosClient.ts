@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "https://frontend-904454434613.europe-west1.run.app",
+  baseURL: import.meta.env.VITE_PUBLIC_BACKEND_URL || "https://frontend-904454434613.europe-west1.run.app",
   timeout: 10000, // 10 secunde
   withCredentials: true,
   headers: {
